@@ -213,7 +213,7 @@ def train_classifier(networks, optimizers, dataloader, epoch=None, **options):
         ############################
 
         # Keep track of accuracy on positive-labeled examples for monitoring
-        print('Classifier Accuracy', netC(images), labels)
+        # print('Classifier Accuracy', netC(images), labels)
 
         #log.print_every()
 

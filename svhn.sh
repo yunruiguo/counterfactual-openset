@@ -12,7 +12,7 @@ if [ ! -f $DATASET_DIR/svhn-split0a.dataset ]; then
 fi
 
 # Hyperparameters
-GAN_EPOCHS=30
+GAN_EPOCHS=0
 CLASSIFIER_EPOCHS=3
 CF_COUNT=50
 GENERATOR_MODE=counterfactual
@@ -25,7 +25,9 @@ python ./generativeopenset/train_gan.py --epochs $GAN_EPOCHS
 python ./generativeopenset/evaluate_classifier.py --result_dir . --mode baseline
 python ./generativeopenset/evaluate_classifier.py --result_dir . --mode weibull
 
-cp ./checkpoints/classifier_k_epoch_00${GAN_EPOCHS}.pth ./checkpoints/classifier_kplusone_epoch_00${GAN_EPOCHS}.pth
+GAN_EPOCHS=132
+
+cp ./checkpoints/classifier_k_epoch_0${GAN_EPOCHS}.pth ./checkpoints/classifier_kplusone_epoch_0${GAN_EPOCHS}.pth
 
 # Generate a number of counterfactual images (in the K+2 by K+2 square grid format)
 python ./generativeopenset/generate_${GENERATOR_MODE}.py --result_dir . --count $CF_COUNT
