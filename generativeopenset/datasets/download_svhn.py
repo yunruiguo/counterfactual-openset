@@ -18,7 +18,7 @@ DOWNLOAD_URL_TRAIN_MAT = 'http://ufldl.stanford.edu/housenumbers/train_32x32.mat
 DOWNLOAD_URL_TEST_MAT = 'http://ufldl.stanford.edu/housenumbers/test_32x32.mat'
 
 
-DATA_DIR = '/mnt/data'
+DATA_DIR = '../data'
 DATASET_NAME = 'svhn'
 DATASET_PATH = os.path.join(DATA_DIR, DATASET_NAME)
 
@@ -45,6 +45,7 @@ def main():
     print("{} dataset download script initializing...".format(DATASET_NAME))
     mkdir(DATA_DIR)
     mkdir(DATASET_PATH)
+    history_path = os.getcwd()
     os.chdir(DATASET_PATH)
 
     print("Downloading {} dataset files...".format(DATASET_NAME))
@@ -61,7 +62,7 @@ def main():
 
     test_data = test_mat['X']
     test_labels = test_mat['y']
-
+    os.chdir(history_path)
     IMG_DIR = os.path.join(DATASET_PATH, 'images')
     if not os.path.exists(IMG_DIR):
         os.mkdir(IMG_DIR)

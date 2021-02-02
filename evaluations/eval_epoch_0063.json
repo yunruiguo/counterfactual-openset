@@ -1,0 +1,10 @@
+{
+  "openset_cifar10-split0b_baseline": {
+    "auc_discriminator": 0.7303745833333334,
+    "closed_set_accuracy": 0.835
+  },
+  "openset_cifar10-split0b_weibull": {
+    "auc_discriminator": 0.7466558333333333,
+    "closed_set_accuracy": 0.835
+  }
+}

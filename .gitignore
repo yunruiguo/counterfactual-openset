@@ -3,3 +3,8 @@ __pycache__
 checkpoints/
 images/
 runs/
+.idea/
+*.dataset
+*.png
+trajectories/
+generativeopenset/data/

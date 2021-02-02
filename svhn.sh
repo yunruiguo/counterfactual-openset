@@ -7,15 +7,15 @@ DATASET_DIR=../data
 # Download any datasets not currently available
 # TODO: do this in python, based on --dataset
 
-if [ ! -f $DATASET_DIR/cifar10-split0a.dataset ]; then
-    python generativeopenset/datasets/download_cifar10.py
+if [ ! -f $DATASET_DIR/svhn-split0a.dataset ]; then
+    python generativeopenset/datasets/download_svhn.py
 fi
 
 # Hyperparameters
 GAN_EPOCHS=30
 CLASSIFIER_EPOCHS=3
 CF_COUNT=50
-GENERATOR_MODE=open_set
+GENERATOR_MODE=counterfactual
 
 
 # Train the intial generative model (E+G+D) and the initial classifier (C_K)
@@ -25,7 +25,7 @@ python ./generativeopenset/train_gan.py --epochs $GAN_EPOCHS
 python ./generativeopenset/evaluate_classifier.py --result_dir . --mode baseline
 python ./generativeopenset/evaluate_classifier.py --result_dir . --mode weibull
 
-cp checkpoints/classifier_k_epoch_00${GAN_EPOCHS}.pth checkpoints/classifier_kplusone_epoch_00${GAN_EPOCHS}.pth
+cp ./checkpoints/classifier_k_epoch_00${GAN_EPOCHS}.pth ./checkpoints/classifier_kplusone_epoch_00${GAN_EPOCHS}.pth
 
 # Generate a number of counterfactual images (in the K+2 by K+2 square grid format)
 python ./generativeopenset/generate_${GENERATOR_MODE}.py --result_dir . --count $CF_COUNT

@@ -47,8 +47,8 @@ class ImageConverter(Converter):
 
     def to_array(self, example):
         filename = os.path.expanduser(example['filename'])
-        if not filename.startswith('/'):
-            filename = os.path.join(DATA_DIR, filename)
+        #if not filename.startswith('/'):
+        #    filename = os.path.join(DATA_DIR, filename)
         box = example.get('box') if self.bounding_box else None
         # HACK
         #box = (.25, .75, 0, 1)

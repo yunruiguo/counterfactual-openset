@@ -7,7 +7,6 @@ from torch.autograd import Variable
 from torch.nn import functional as F
 from vector import clamp_to_unit_sphere
 
-from logutil import TimeSeries
 import imutil
 
 
@@ -95,7 +94,7 @@ def generate_open_set(networks, dataloader, **options):
     return images
 
 
-log = TimeSeries('Counterfactual')
+print('Counterfactual')
 def generate_counterfactual_column(networks, start_images, target_class, **options):
     netG = networks['generator']
     netC = networks['classifier_k']
@@ -134,10 +133,10 @@ def generate_counterfactual_column(networks, start_images, target_class, **optio
 
         scores = F.softmax(augmented_logits, dim=1)
 
-        log.collect('Counterfactual loss', cf_loss)
-        log.collect('Distance Loss', distance_loss)
-        log.collect('Classification as {}'.format(target_class), scores[0][target_class])
-        log.print_every(n_sec=1)
+        #log.collect('Counterfactual loss', cf_loss)
+        #log.collect('Distance Loss', distance_loss)
+        #log.collect('Classification as {}'.format(target_class), scores[0][target_class])
+        #log.print_every(n_sec=1)
 
         dc_dz = autograd.grad(total_loss, z, total_loss)[0]
         z = z - dc_dz * speed
@@ -148,7 +147,7 @@ def generate_counterfactual_column(networks, start_images, target_class, **optio
         # See https://github.com/pytorch/pytorch/issues/4661
         z_value = to_np(z)
         del z
-    print(log)
+    #print(log)
     z = to_torch(z_value)
 
     images = netG(z, gan_scale)

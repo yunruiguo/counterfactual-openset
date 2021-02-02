@@ -7,7 +7,7 @@ from tqdm import tqdm
 from PIL import Image
 import pickle
 
-DATA_DIR = '/mnt/data'
+DATA_DIR = '../data'
 DATASET_NAME = 'cifar10'
 DATASET_PATH = os.path.join(DATA_DIR, DATASET_NAME)
 
@@ -21,7 +21,9 @@ def main():
     print("{} dataset download script initializing...".format(DATASET_NAME))
     mkdir(DATA_DIR)
     mkdir(DATASET_PATH)
+    history_path = os.getcwd()
     os.chdir(DATASET_PATH)
+
 
     print("Downloading {} dataset files to {}...".format(DATASET_NAME, DATASET_PATH))
     download('cifar-10-python.tar.gz', IMAGES_LABELS_URL)
@@ -59,6 +61,7 @@ def main():
 
     print("Saving .dataset files...")
     output_filename = '{}/{}.dataset'.format(DATA_DIR, DATASET_NAME)
+    os.chdir(history_path)
     save_image_dataset(examples, output_filename)
 
     animals = [e for e in examples if e['is_animal']]

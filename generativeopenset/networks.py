@@ -54,6 +54,7 @@ def save_networks(networks, epoch, result_dir):
 
 def get_optimizers(networks, lr=.0001, beta1=.5, beta2=.999, weight_decay=.0, finetune=False, **options):
     optimizers = {}
+
     if finetune:
         lr /= 10
         print("Fine-tuning mode activated, dropping learning rate to {}".format(lr))

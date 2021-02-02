@@ -22,6 +22,7 @@ DEFAULT_FOLD = 'train'
 
 class DatasetFile(object):
     def __init__(self, input_filename, example_count=None):
+
         input_filename = os.path.expanduser(input_filename)
         self.data_dir = os.path.dirname(input_filename)
         self.name = os.path.split(input_filename)[-1].replace('.dataset', '')

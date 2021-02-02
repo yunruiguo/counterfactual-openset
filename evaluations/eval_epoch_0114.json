@@ -1,0 +1,10 @@
+{
+  "openset_svhn-split0b_baseline": {
+    "auc_discriminator": 0.8293160405724088,
+    "closed_set_accuracy": 0.9618726420487024
+  },
+  "openset_svhn-split0b_weibull": {
+    "auc_discriminator": 0.8992763051002757,
+    "closed_set_accuracy": 0.9618726420487024
+  }
+}

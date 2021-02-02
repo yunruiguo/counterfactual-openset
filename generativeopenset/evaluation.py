@@ -30,7 +30,7 @@ def evaluate_classifier(networks, dataloader, open_set_dataloader=None, **option
     classification_closed_correct = 0
     classification_total = 0
     for images, labels in dataloader:
-        images = Variable(images, volatile=True)
+        images = Variable(images, requires_grad=False)
         # Predict a classification among known classes
         net_y = netC(images)
         class_predictions = F.softmax(net_y, dim=1)
@@ -217,7 +217,7 @@ def openset_weibull(dataloader_test, dataloader_train, netC):
 def openset_kplusone(dataloader, netC):
     openset_scores = []
     for i, (images, labels) in enumerate(dataloader):
-        images = Variable(images, volatile=True)
+        images = Variable(images, requires_grad=False)
         preds = netC(images)
         # The implicit K+1th class (the open set class) is computed
         #  by assuming an extra linear output with constant value 0
@@ -231,7 +231,7 @@ def openset_kplusone(dataloader, netC):
 def openset_softmax_confidence(dataloader, netC):
     openset_scores = []
     for i, (images, labels) in enumerate(dataloader):
-        images = Variable(images, volatile=True)
+        images = Variable(images, requires_grad=False)
         preds = F.softmax(netC(images), dim=1)
         openset_scores.extend(preds.max(dim=1)[0].data.cpu().numpy())
     return -np.array(openset_scores)
@@ -240,7 +240,7 @@ def openset_softmax_confidence(dataloader, netC):
 def openset_fuxin(dataloader, netC):
     openset_scores = []
     for i, (images, labels) in enumerate(dataloader):
-        images = Variable(images, volatile=True)
+        images = Variable(images, requires_grad=False)
         logits = netC(images)
         augmented_logits = F.pad(logits, pad=(0,1))
         # The implicit K+1th class (the open set class) is computed

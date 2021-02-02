@@ -8,12 +8,11 @@ from torch.autograd import Variable
 from vector import make_noise
 from dataloader import FlexibleCustomDataloader
 import imutil
-from logutil import TimeSeries
 
 from gradient_penalty import calc_gradient_penalty
 
 
-log = TimeSeries('Training GAN')
+print('Training GAN')
 
 
 def train_gan(networks, optimizers, dataloader, epoch=None, **options):
@@ -48,7 +47,7 @@ def train_gan(networks, optimizers, dataloader, epoch=None, **options):
         fake_images = netG(noise, sample_scale)
         logits = netD(fake_images)[:,0]
         loss_fake_sampled = F.softplus(logits).mean()
-        log.collect('Discriminator Sampled', loss_fake_sampled)
+        #print('Discriminator Sampled', loss_fake_sampled)
         loss_fake_sampled.backward()
 
         """
@@ -68,11 +67,11 @@ def train_gan(networks, optimizers, dataloader, epoch=None, **options):
         loss_real = F.softplus(-logits).mean() * options['discriminator_weight']
         #loss_real = -logits.mean() * options['discriminator_weight']
         loss_real.backward()
-        log.collect('Discriminator Real', loss_real)
+        #print('Discriminator Real', loss_real)
 
         gp = calc_gradient_penalty(netD, images.data, fake_images.data)
         gp.backward()
-        log.collect('Gradient Penalty', gp)
+        #print('Gradient Penalty', gp)
 
         optimizerD.step()
 
@@ -99,7 +98,7 @@ def train_gan(networks, optimizers, dataloader, epoch=None, **options):
         #errG = F.softplus(-logits).mean() * options['generator_weight']
         errG = -logits.mean() * options['generator_weight']
         errG.backward()
-        log.collect('Generator Autoencoded', errG)
+        #print('Generator Autoencoded', errG)
 
         optimizerG.step()
 
@@ -113,7 +112,7 @@ def train_gan(networks, optimizers, dataloader, epoch=None, **options):
         reconstructed = netG(netE(images, ac_scale), ac_scale)
         err_reconstruction = torch.mean(torch.abs(images - reconstructed)) * options['reconstruction_weight']
         err_reconstruction.backward()
-        log.collect('Pixel Reconstruction Loss', err_reconstruction)
+        #print('Pixel Reconstruction Loss', err_reconstruction)
 
         optimizerE.step()
         optimizerG.step()
@@ -128,16 +127,15 @@ def train_gan(networks, optimizers, dataloader, epoch=None, **options):
         classifier_logits = netC(images)
         errC = F.softplus(classifier_logits * -labels).mean()
         errC.backward()
-        log.collect('Classifier Loss', errC)
+        #print('Classifier Loss', errC)
 
         optimizerC.step()
         ############################
 
         # Keep track of accuracy on positive-labeled examples for monitoring
-        log.collect_prediction('Classifier Accuracy', netC(images), labels)
+        #print('Classifier Accuracy', netC(images), labels)
         #log.collect_prediction('Discriminator Accuracy, Real Data', netD(images), labels)
 
-        log.print_every()
 
         if i % 100 == 1:
             fixed_noise = make_noise(batch_size, latent_size, sample_scale, fixed_seed=42)
@@ -200,7 +198,7 @@ def train_classifier(networks, optimizers, dataloader, epoch=None, **options):
         _, labels_idx = labels.max(dim=1)
         errC = F.nll_loss(F.log_softmax(augmented_logits, dim=1), labels_idx)
         errC.backward()
-        log.collect('Classifier Loss', errC)
+        #log.collect('Classifier Loss', errC)
 
         # Classify aux_dataset examples as open set
         aux_images, aux_labels = aux_dataloader.get_batch()
@@ -209,14 +207,14 @@ def train_classifier(networks, optimizers, dataloader, epoch=None, **options):
         log_soft_open = F.log_softmax(augmented_logits, dim=1)[:, -1]
         errOpenSet = -log_soft_open.mean()
         errOpenSet.backward()
-        log.collect('Open Set Loss', errOpenSet)
+        #log.collect('Open Set Loss', errOpenSet)
 
         optimizerC.step()
         ############################
 
         # Keep track of accuracy on positive-labeled examples for monitoring
-        log.collect_prediction('Classifier Accuracy', netC(images), labels)
+        print('Classifier Accuracy', netC(images), labels)
 
-        log.print_every()
+        #log.print_every()
 
     return True
